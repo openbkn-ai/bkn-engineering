@@ -1,0 +1,14 @@
+OpenBKN Engineering
+Copyright 2026 OpenBKN contributors
+
+This product includes Agent Skill materials and methodology adapted for
+OpenBKN under the Apache License, Version 2.0.
+
+OpenBKN Engineering publishes four top-level skills:
+
+- bkn-requirement
+- bkn-ontology-builder
+- bkn-methodology
+- bkn-creator
+
+Platform operations are provided by the separate @openbkn/bkn-sdk package.

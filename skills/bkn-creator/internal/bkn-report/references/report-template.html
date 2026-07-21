@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>BKN 报告 - {{network_name}}</title>
+<style>
+  body { font-family: -apple-system, sans-serif; max-width: 900px; margin: 2rem auto; color: #333; }
+  h1 { border-bottom: 2px solid #0e5fc5; padding-bottom: 0.5rem; }
+  h2 { color: #0e5fc5; margin-top: 2rem; }
+  h3 { color: #333; margin-top: 1.5rem; border-bottom: 1px solid #eee; padding-bottom: 0.25rem; }
+  table { border-collapse: collapse; width: 100%; margin: 1rem 0; }
+  th, td { border: 1px solid #ddd; padding: 0.5rem; text-align: left; }
+  th { background: #f5f7fa; }
+  .pass { color: #52c41a; } .warn { color: #faad14; } .fail { color: #f5222d; }
+  .score { font-size: 2rem; font-weight: bold; }
+  .meta { color: #999; font-size: 0.9rem; }
+  .object-section { margin: 1rem 0; padding: 1rem; background: #fafafa; border-radius: 4px; }
+  .object-section.local-object { background: #f0f0f0; opacity: 0.7; }
+  .properties-table { margin-bottom: 0.5rem; }
+  .keys { color: #666; font-size: 0.85rem; margin: 0; }
+</style>
+</head>
+<body>
+<h1>{{network_name}}</h1>
+<p class="meta">领域：{{domain}} | 生成时间：{{timestamp}} | trace_id：{{trace_id}}</p>
+
+<h2>质量评分</h2>
+<p class="score {{verdict_class}}">{{quality_score}} / 100</p>
+<table>
+  <tr><th>维度</th><th>得分</th><th>权重</th></tr>
+  <!-- {{score_rows}} -->
+</table>
+
+<h2>网络概览</h2>
+<table>
+  <tr><th>指标</th><th>数值</th></tr>
+  <tr><td>对象类数</td><td>{{object_count}}</td></tr>
+  <tr><td>关系类数</td><td>{{relation_count}}</td></tr>
+  <tr><td>绑定率</td><td>{{binding_rate}}</td></tr>
+  <tr><td>映射覆盖率</td><td>{{mapping_coverage}}</td></tr>
+</table>
+
+<h2>测试摘要</h2>
+<table>
+  <tr><th>类别</th><th>通过</th><th>失败</th><th>阻塞</th></tr>
+  <!-- {{test_rows}} -->
+</table>
+
+<h2>对象类详情</h2>
+<!-- {{object_detail_rows}} -->
+
+<h2>业务规则</h2>
+<p>规则总数：{{rule_count}} | 锚定对象数：{{anchor_count}}</p>
+
+<h2>Q&A 验证</h2>
+<p>通过率：{{qa_pass_rate}}</p>
+
+<h2>产物清单</h2>
+<ul>
+  <!-- {{artifact_list}} -->
+</ul>
+</body>
+</html>

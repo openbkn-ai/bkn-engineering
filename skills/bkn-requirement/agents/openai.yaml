@@ -1,0 +1,6 @@
+interface:
+  display_name: "BKN 需求发现"
+  short_description: "生成调研提纲并迭代场景中心 PRD"
+  default_prompt: "使用 $bkn-requirement 基于客户背景生成调研提纲，或基于调研大纲、会议纪要和上一版 PRD 更新新一版 PRD。"
+policy:
+  allow_implicit_invocation: true

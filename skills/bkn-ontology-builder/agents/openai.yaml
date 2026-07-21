@@ -1,0 +1,6 @@
+interface:
+  display_name: "BKN 本体建模方案"
+  short_description: "生成业务可评审的 BKN 本体建模方案"
+  default_prompt: "使用 $bkn-ontology-builder 基于 PRD、会议纪要、流程说明或 BKN_Creator 交接摘要，生成业务可评审的本体建模方案。"
+policy:
+  allow_implicit_invocation: true
