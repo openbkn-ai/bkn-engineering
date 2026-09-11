@@ -335,14 +335,13 @@ openbkn bkn action-log get <kn_id> <execution_id>
 
 ## Data Source 绑定类型
 
-Object Type 的 `data_source` 支持两种 type：
+Object Type 的 `data_source.type` 固定为 `resource`：
 
 | `data_source.type` | ID 来源 | 数据访问方式 | `bkn build` |
 |---|---|---|---|
-| `data_view` | `dataview list` 的 mdl UUID | 构建索引后查询 | 需要 |
 | `resource` | `vega resource list` 的 Vega 资源 ID | 通过 Vega 实时查询 | 不需要 / 不支持 |
 
-`object-type create --dataview-id` 的 `--dataview-id` 参数可接受任一类型的 ID，CLI 会根据当前配置自动确定 `data_source.type`。
+`object-type create` 的数据源参数必须传入 `vega resource list` 返回的资源 ID。
 
 ## 端到端示例
 

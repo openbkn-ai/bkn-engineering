@@ -50,21 +50,21 @@ description: 将绑定/映射结果写回 .bkn 文件。
    - **direct 类型**：
      - 回填 Endpoint 表的 Type 列为 `direct`
      - 回填 Mapping Rules 表（Source Property → Target Property）
-   - **data_view 类型**：
-     - 回填 Endpoint 表的 Type 列为 `data_view`
-     - 回填 Mapping View 表（Type = data_view, ID = intermediate_view_id）
-     - 回填 Source Mapping 表（Source Property → View Property）
-     - 回填 Target Mapping 表（View Property → Target Property）
+   - **indirect 类型**：
+     - 回填 Endpoint 表的 Type 列为 `indirect`
+     - 回填 Backing Resource 表（Type = resource, ID = backing_resource_id）
+     - 回填 Source Mapping 表（Source Property → Resource Property）
+     - 回填 Target Mapping 表（Resource Property → Target Property）
    - **pending 关系**：
      - 仅回填 Endpoint 表（Type 列保留占位符或留空）
-     - Mapping View / Source/Target Mapping 段不生成
+     - Backing Resource / Source/Target Mapping 段不生成
    - 跳过 `relation_mapping_quality: blocked` 的关系（在输出中标记）
 7. **推送前关系映射完整性预检**（执行 `../_shared/prepush-validation.md`）：
    - 检查所有 `relation_types` 的 Source/Target Property 是否存在于对应对象的 Data Properties
    - 检查所有 `action_types` 的 Parameter Binding 属性是否存在于绑定对象的 Data Properties
    - 检查 Concept Group 成员和 Network Overview 一致性
-   - 检查 data_view 类型关系的 Mapping View ID 是否非空
-   - 检查 data_view 类型关系的 Source/Target Mapping 属性是否存在于对应视图 schema
+   - 检查 indirect 类型关系的 Backing Resource ID 是否非空
+   - 检查 indirect 类型关系的 Source/Target Mapping 属性是否存在于对应资源 schema
    - `local` 对象跳过属性存在性检查，但仍参与对象存在性检查
    - `pending` 关系仅 warning，不阻断
    - **预检失败 → 阻断写入，列出全部错误**，提示修复后重试
@@ -83,10 +83,10 @@ backfill_plan:
   relation_replacements:
     - 关系ID: ""
       关系名称: ""
-      关系类型: direct | data_view
+      关系类型: direct | indirect
       actions:
         - action: ""                  # fill_endpoint_type / fill_mapping_view / fill_source_mapping / fill_target_mapping
-          target_section: ""          # Endpoint / Mapping View / Source Mapping / Target Mapping
+          target_section: ""          # Endpoint / Backing Resource / Source Mapping / Target Mapping
           old_value: ""
           new_value: ""
   skipped_local_objects: [对象名]

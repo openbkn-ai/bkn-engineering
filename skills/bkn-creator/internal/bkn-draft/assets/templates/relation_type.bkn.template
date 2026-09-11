@@ -21,24 +21,24 @@ tags: [{标签1}, {标签2}]
 |-----------------|-----------------|
 | {source_prop} | {target_prop} |
 
-<!-- 当 Type 为 data_view 或 resource 时，用以下节替换 Mapping Rules：
+<!-- 当 Type 为 indirect 时，用以下节替换 Mapping Rules：
 
-### Mapping View
+### Backing Resource
 
 | Type | ID |
 |------|-----|
-| resource | {resource_or_view_id} |
+| resource | {resource_id} |
 
 ### Source Mapping
 
-| Source Property | View Property |
-|-----------------|---------------|
-| {source_prop} | {view_prop} |
+| Source Property | Resource Property |
+|-----------------|-------------------|
+| {source_prop} | {resource_prop} |
 
 ### Target Mapping
 
-| View Property | Target Property |
-|---------------|-----------------|
-| {view_prop} | {target_prop} |
+| Resource Property | Target Property |
+|-------------------|-----------------|
+| {resource_prop} | {target_prop} |
 
 -->

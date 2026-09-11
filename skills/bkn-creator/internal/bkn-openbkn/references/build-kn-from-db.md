@@ -31,18 +31,16 @@ openbkn bkn search <kn_id> "订单"
 | 从 schema 生成全部属性 + `mapped_field` | 是 | 否；CLI 会按 dataview 拉取字段并补全 `mapped_field`（见下） |
 | 自动 `bkn build` | 可选 `--build` | 需单独 `bkn build` |
 | 自定义 PK/DK/属性名 | 有限（启发式） | 完全可控 |
-| Data Source 类型 | `resource`（Vega 资源 ID） | 取决于 CLI 版本（`data_view` 或 `resource`） |
+| Data Source 类型 | `resource`（Vega 资源 ID） | `resource`（Vega 资源 ID） |
 
 **推荐**：优先用快速路径；仅在需要自定义 PK/DK、筛选表或属性名时再走分步路径。
 
 ### Data Source 绑定类型说明
 
-后端支持两种 `data_source.type`，均可成功创建对象类，但数据访问方式不同：
+Object Type 的 `data_source.type` 固定为 `resource`：
 
 - **`resource`**：绑定 Vega 资源 ID（`vega resource list` 返回），`create-from-ds` 使用此类型。数据通过 Vega 实时查询，**不需要也不支持 `bkn build`**
-- **`data_view`**：绑定 mdl 数据视图 UUID（`dataview list` 返回），传统路径。**需要 `bkn build` 构建索引**后才可查询
-
-分步路径中 `--dataview-id` 可接受任一类型的 ID。如需获取 Vega 资源的列信息，可通过 `vega resource query <id> -d '{"limit":1}'` 查询一条数据推断字段。
+分步路径必须使用 `vega resource list` 返回的 ID。如需获取 Vega 资源的列信息，可通过 `vega resource query <id> -d '{"limit":1}'` 查询一条数据推断字段。
 
 ## 分步路径
 

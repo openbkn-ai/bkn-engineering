@@ -185,9 +185,9 @@ patrol_result:
 ### relation_binding_issue → bkn-relation-bind + bkn-backfill
 
 1. 将问题涉及的关系传入 `../bkn-relation-bind/SKILL.md`
-2. 重新判定关系类型（direct / data_view）
-3. 如需中间视图，推荐候选并用户确认
-4. 确认后由 `../bkn-backfill/SKILL.md` 回填关系类 Mapping View + Source/Target Mapping
+2. 重新判定关系类型（direct / indirect）
+3. 如需 backing resource，推荐候选并用户确认
+4. 确认后由 `../bkn-backfill/SKILL.md` 回填关系类 Backing Resource + Source/Target Mapping
 
 ---
 

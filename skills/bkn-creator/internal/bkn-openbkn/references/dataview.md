@@ -63,14 +63,13 @@ openbkn dataview query <view-id> --sql "SELECT * FROM my_table LIMIT 10" --prett
 
 ## 与 BKN 的关系
 
-数据视图通过 Object Type 的 `Data Source` 段绑定到知识网络。后端支持两种绑定方式：
+数据视图不能作为 Object Type 的 `Data Source` 绑定到知识网络。BKN 对象仅可绑定 Vega resource：
 
 | Data Source Type | ID 来源 | 说明 |
 |---|---|---|
-| `data_view` | `dataview list` 返回的 mdl UUID | 传统 mdl-data-model 路径 |
-| `resource` | `vega resource list` 返回的 Vega 资源 ID | Vega 路径（`create-from-ds` 内部使用） |
+| `resource` | `vega resource list` 返回的 Vega 资源 ID | BKN 对象绑定的唯一支持路径 |
 
-两种类型在后端均能成功创建对象类。`dataview` 命令和 `vega resource` 命令实际操作不同的后端接口，返回不同格式的 ID，但都可用于绑定。
+`dataview` 命令和 `vega resource` 命令实际操作不同的后端接口；仅后者返回可用于 BKN 绑定的 ID。
 
 ### 知识网络 → SQL JOIN（高级用法）
 

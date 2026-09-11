@@ -41,8 +41,8 @@ Incremental Key:
 
 -->
 
-<!-- 可选：无数据源绑定时省略整个 Data Source 节 -->
-<!-- Type: data_view (mdl 数据视图 UUID，需 bkn build 构建索引) 或 resource (Vega 资源 ID，实时查询，无需 build) -->
+<!-- 可选：无资源绑定时省略整个 Data Source 节 -->
+<!-- Type 固定为 resource（Vega 资源 ID，实时查询，无需 build） -->
 
 ### Data Source
 

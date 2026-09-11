@@ -46,9 +46,9 @@ description: 属性到字段映射 + 覆盖率计算 + 完备性放行。
 
 详细规则见 `references/mapping-rules.md`
 
-### 关系类 View Property 映射（新增）
+### 间接关系 Resource Property 映射（新增）
 
-仅处理 `relation_binding_result.data_view_relations` 中 `status: confirmed` 的关系：
+仅处理 `relation_binding_result.indirect_relations` 中 `status: confirmed` 的关系：
 
 1. **Source Mapping 映射**：
    - 输入：`source_mapping_rules`（起点属性 → 中间视图字段）
@@ -68,7 +68,7 @@ description: 属性到字段映射 + 覆盖率计算 + 完备性放行。
 
 **跳过条件**：
 - `relation_binding_result` 为空或不存在
-- 无 `confirmed` 的 data_view 类型关系
+- 无 `confirmed` 的 indirect 类型关系
 
 ## 输出
 
@@ -87,15 +87,15 @@ mapping_gate_summary: {coverage, blocked_count, mapping_quality, recommended_str
 relation_mapping_draft:
   - 关系ID: ""
     关系名称: ""
-    关系类型: direct | data_view
-    intermediate_view_id: ""      # 仅 data_view 类型
+    关系类型: direct | indirect
+    backing_resource_id: ""       # 仅 indirect 类型
     source_mapping:
       - source_property: ""
-        view_property: ""
+        resource_property: ""
         status: mapped | blocked
         reason: ""
     target_mapping:
-      - view_property: ""
+      - resource_property: ""
         target_property: ""
         status: mapped | blocked
         reason: ""
