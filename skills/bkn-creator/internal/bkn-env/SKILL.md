@@ -27,7 +27,7 @@ description: BKN 执行前环境就绪检查与 bootstrap 判定。
 | 平台连通性 | `openbkn config show` | blocked |
 | 业务域 | 配置是否匹配 | warning |
 | 同名网络 | `openbkn bkn list` | 记录冲突 |
-| 资源就绪 | 数据源 + 数据视图是否存在 | 触发 bind_mode 判定 |
+| 资源就绪 | Vega resource 是否存在 | 触发 bind_mode 判定 |
 | Skill 模块 | `openbkn skill list --limit 1` | warning（记入 capability_matrix） |
 | Agent 工厂 | `openbkn agent list --limit 1` | warning（记入 capability_matrix） |
 | 定时任务（巡检用） | OpenClaw 调度 API 可用性 | warning（记入 capability_matrix） |
@@ -54,34 +54,34 @@ description: BKN 执行前环境就绪检查与 bootstrap 判定。
 3. 根据检测结果判定 `plugin_mode`（见 `plugin-check.md`）
 4. 结果写入 `pipeline_state.yaml`，pipeline 据此裁剪阶段分支
 
-## 数据视图可用性检查
+## Resource 可用性检查
 
-在资源就绪检查阶段，获取平台可用数据视图列表（仅元数据），供后续绑定阶段使用：
+在资源就绪检查阶段，获取平台可用 Vega resource 列表（仅元数据），供后续绑定阶段使用：
 
-1. 执行 `openbkn dataview list` 获取平台全部可用数据视图
+1. 执行 `openbkn vega resource list` 获取平台全部可用资源
    - **必须获取全部视图**：优先使用 `--all` 参数；如不支持则使用 `--page-size` 分页循环获取，直到获取数量等于平台返回的总数
    - 如平台未返回总数且 CLI 不支持分页参数，执行 `openbkn dataview list --limit 9999` 作为降级方案
-2. 输出 `dataview_availability`（仅含视图元数据，不做对象-视图匹配推荐）
-3. 对象-视图匹配的决策权交由 `bkn-bind`
-4. **视图字段 schema 由 `bkn-bind` 按需获取**（`bkn-bind` 执行 `openbkn dataview get` 获取已匹配视图的完整字段 schema）
+2. 输出 `resource_availability`（仅含资源元数据，不做对象-资源匹配推荐）
+3. 对象-资源匹配的决策权交由 `bkn-bind`
+4. **资源 property schema 由 `bkn-bind` 按需获取**（通过 `openbkn vega resource query <id> -d '{"limit":1}'` 推断属性）
 
 ```yaml
-dataview_availability:
-  total_views: 0
-  fetched_views: 0        # 实际获取的视图数量
+resource_availability:
+  total_resources: 0
+  fetched_resources: 0    # 实际获取的资源数量
   truncated: false        # true 表示平台有截断风险，bkn-bind 应 warn 用户
-  available_views: [{view_id, view_name, datasource_id, field_count}]
+  available_resources: [{resource_id, resource_name, datasource_id, property_count}]
 ```
 
 ## Bootstrap 与 bind_mode 判定
 
 | 资源状态 | bootstrap_level | result_status | bind_mode |
 |---------|----------------|---------------|-----------|
-| 数据源+视图都有 | none | ready | full |
+| 数据源+资源都有 | none | ready | full |
 | 仅有其一 | soft | need_user_confirm | full |
 | 都没有 | none | ready | deferred |
 
-`bind_mode: deferred` 表示当前环境无可用数据视图，pipeline 将跳过视图绑定阶段（阶段四），推送门禁中的绑定相关条件自动豁免。网络以 schema-only 模式推送，数据视图可后续通过 update pipeline 补绑。
+`bind_mode: deferred` 表示当前环境无可用资源，pipeline 将跳过资源绑定阶段（阶段四），推送门禁中的绑定相关条件自动豁免。网络以 schema-only 模式推送，资源可后续通过 update pipeline 补绑。
 
 ## 输出
 
@@ -97,13 +97,13 @@ plugin_availability:
 check_summary: {cli, connectivity, domain, draft, resource_readiness}
 blocking_issues: [{issue, reason, suggested_fix}]
 bootstrap_plan: {steps, estimated_effort}
-dataview_availability: {total_views, fetched_views, truncated, available_views}
+resource_availability: {total_resources, fetched_resources, truncated, available_resources}
 env_capability_matrix:
   cli: available | unavailable
   platform: available | unavailable
   skill_module: available | unavailable
   agent_factory: available | unavailable
-  dataview: available | unavailable
+  resource: available | unavailable
   context_loader: available | unavailable
   patrol_cron: available | unavailable  # P1-5/P1-6 巡检自动创建
 ```

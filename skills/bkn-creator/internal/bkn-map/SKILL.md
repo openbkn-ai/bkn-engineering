@@ -16,7 +16,7 @@ description: 属性到字段映射 + 覆盖率计算 + 完备性放行。
 - `binding_decision_list`：`bkn-bind` 的输出（仅处理 bound 对象）
 - `relation_binding_result`：`bkn-relation-bind` 的输出（仅处理 confirmed 关系）
 - `object_draft_list`：对象清单（含属性）
-- `view_schema_map`：已绑定视图的字段 schema + 外键信息
+- `resource_schema_map`：已绑定资源的 property schema + 外键信息
 
 ## 流程
 
@@ -80,7 +80,7 @@ property_mapping_draft:
     waived_count: 0
     blocked_count: 0
     coverage: 0.0
-    rows: [{property_name, status, view_id, field_path, confidence, reason}]
+    rows: [{property_name, status, resource_id, property_path, confidence, reason}]
 mapping_gate_summary: {coverage, blocked_count, mapping_quality, recommended_strategy}
 
 # 新增：关系类映射结果

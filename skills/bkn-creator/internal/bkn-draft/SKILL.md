@@ -50,7 +50,7 @@ description: 将确认后的建模清单生成 .bkn 文件。
      - 仅保留 `Data Properties`（定义对象的基本属性结构）
    - **注意**：`relation_types` 和 `action_types` 中的关系/动作可以引用 local 对象的属性，draft 阶段照常生成对应关系/动作文件
 7. **Data Source 处理**（仅 platform 对象）：
-   - 若此时已完成视图绑定（有 `binding_decision_list`）→ 写入真实 `view_id`
+   - 若此时已完成资源绑定（有 `binding_decision_list`）→ 写入真实 `resource_id`
    - 若尚未绑定 → **省略整个 `### Data Source` 小节**，不写占位符
    - **禁止写 `待绑定` 或任何占位文本**，平台会将其解析为 view ID 导致推送失败
 8. `Mapped Field` 同理：无绑定时写 `-`，不写占位

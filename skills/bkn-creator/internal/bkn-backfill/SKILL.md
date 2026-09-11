@@ -9,7 +9,7 @@ description: 将绑定/映射结果写回 .bkn 文件。
 
 ## 做什么
 
-把 `bkn-bind` 和 `bkn-map` 的结果合并，写回 `.bkn` 文件，完成数据视图绑定闭环。
+把 `bkn-bind` 和 `bkn-map` 的结果合并，写回 `.bkn` 文件，完成资源绑定闭环。
 
 ## 输入
 
@@ -31,11 +31,11 @@ description: 将绑定/映射结果写回 .bkn 文件。
        `"bkn-backfill 需要 bkn-map 先执行完成（map_completed 未就绪）。请 pipeline 调度 bkn-map 后再调用本 skill。"`
 2. 合并绑定变更 + 属性变更 + 映射状态为统一差异清单
 3. **存储位置过滤**：
-   - 跳过 `存储位置: local` 的对象（本地对象无需数据视图绑定，不参与回填）
+   - 跳过 `存储位置: local` 的对象（本地对象无需资源绑定，不参与回填）
    - 在输出摘要中单独列出被跳过的 local 对象
 4. **对象类回填**（仅 platform 对象）：
-   - Data Source 绑定值替换（名称/技术名 → 稳定 `view_id`）
-   - Mapped Field 更新为数据视图真实字段名
+   - Data Source 绑定值替换（名称/技术名 → 稳定 `resource_id`）
+   - Mapped Field 更新为资源真实属性名
    - 数据视图中不存在的属性：默认标注 Mapped Field 为 `-`（保留属性定义，便于后续补绑）；用户可指定删除该行
    - 不改动 Description 或其他业务语义字段
 5. **级联修正**（关键改进）：
@@ -76,7 +76,7 @@ description: 将绑定/映射结果写回 .bkn 文件。
 
 ```yaml
 backfill_plan:
-  binding_replacements: [{object, old_value, new_view_id}]
+  binding_replacements: [{object, old_value, new_resource_id}]
   property_changes: [{object, property, action, layer}]
   cascade_renames: [{file, table, old_ref, new_ref}]
   # 新增：关系类回填计划

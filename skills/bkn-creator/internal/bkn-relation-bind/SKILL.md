@@ -13,14 +13,14 @@ description: 基于对象资源绑定结果判定关系类型，绑定 backing r
 
 ## 触发时机
 
-在 `bkn-bind` 之后、`bkn-map` 之前执行。此时对象类已绑定到具体数据视图，可以分析视图间的关联关系。
+在 `bkn-bind` 之后、`bkn-map` 之前执行。此时对象类已绑定到资源，可以分析资源间的关联关系。
 
 ## 输入
 
 - `binding_decision_list`：`bkn-bind` 的输出（bound 对象列表）
-- `view_schema_map`：各对象视图的字段 schema + 外键信息
+- `resource_schema_map`：各对象资源的 property schema + 外键信息
 - `relation_list`：关系清单（来自 `bkn-extract`）
-- `dataview_availability`：可选，平台可用视图列表（用于中间视图推荐）
+- `resource_availability`：可选，平台可用资源列表（用于 backing resource 推荐）
 
 ## 关系类型判定规则
 
