@@ -64,11 +64,11 @@ resource_schema_map:
 `bkn-bind` 是对象-资源匹配的唯一决策点。`bkn-env` 仅提供可用资源列表（`resource_availability`），不做匹配推荐。
 
 **候选资源来源**：
-1. `candidate_views` 非空 → 使用用户传入的候选列表（`dataview_availability` 仅用于截断风险检查）
-2. `candidate_views` 为空 + `dataview_availability` 存在 → 使用 `dataview_availability.available_views`
-3. `candidate_views` 为空 + `dataview_availability` 不存在（如 update pipeline 跳过了 bkn-env）→ warn 用户"无候选视图列表，请手动指定 view_id 或 view_name 辅助匹配"
+1. `candidate_resources` 非空 → 使用用户传入的候选列表（`resource_availability` 仅用于截断风险检查）
+2. `candidate_resources` 为空 + `resource_availability` 存在 → 使用 `resource_availability.available_resources`
+3. `candidate_resources` 为空 + `resource_availability` 不存在（如 update pipeline 跳过了 bkn-env）→ warn 用户"无候选资源列表，请手动指定 resource_id 或 resource_name 辅助匹配"
 
-**截断风险处理**：当 `dataview_availability.truncated == true` 时：
+**截断风险处理**：当 `resource_availability.truncated == true` 时：
 - 向用户发出 warning："平台视图列表可能存在截断，自动匹配可能遗漏目标视图。建议手动指定 view_id 或 view_name 辅助匹配。"
 - 继续用已获取的候选列表执行匹配，不阻断流程
 - 匹配结果为 pending 时，提示用户可能需要手动确认 view_id

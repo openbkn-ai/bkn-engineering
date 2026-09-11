@@ -74,7 +74,7 @@ description: 基于对象资源绑定结果判定关系类型，绑定 backing r
 
 ```
 1. 中间视图推荐：
-   - 扫描 dataview_availability，找同时引用起点和终点视图的候选
+   - 扫描 resource_availability，找同时关联起点和终点资源的候选
    - 或根据业务名称线索匹配（如"订单明细"、"关联表"）
    - 输出候选列表（最多 5 个）
    
