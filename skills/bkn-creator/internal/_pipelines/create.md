@@ -35,9 +35,9 @@
 
 ```
 bkn-domain → bkn-extract → [bkn-doctor] → bkn-draft → bkn-env
-  → bkn-bind（local 跳过，输出 view_schema_map）
-  → bkn-relation-bind（关系类型判定 + 中间视图绑定）
-  → bkn-map（local 跳过，属性名对齐+回灌，关系 View Property 映射）
+  → bkn-bind（local 跳过，输出 resource_schema_map）
+  → bkn-relation-bind（关系类型判定 + backing resource 绑定）
+  → bkn-map（local 跳过，属性名对齐+回灌，关系 Resource Property 映射）
   → bkn-backfill（local 跳过，级联修正关系/动作属性引用 + 关系类回填 + 写入前预检）
   → [bkn-rules(full) → bkn-anchor → bkn-distribute]（插件，可跳过）
   → [bkn-test(schema_review) → bkn-review]（静态检查，可跳过）
@@ -101,13 +101,13 @@ bkn-domain → bkn-extract → [bkn-doctor] → bkn-draft → bkn-env
 | 就绪检查 | `../bkn-env/SKILL.md` | 输出 `bind_mode`、`env_capability_matrix`、`plugin_availability` |
 | bootstrap | 需搭建则暂停，完成后回检 | 仅 `bind_mode == full` 时 |
 
-`bkn-env` 判定 `bind_mode: deferred`（无可用数据视图）时，阶段四、阶段五整体跳过，直接进入阶段六。`env_capability_matrix` 和 `plugin_availability` 写入 `pipeline_state.yaml`，供后续阶段裁剪分支。
+`bkn-env` 判定 `bind_mode: deferred`（无可用资源）时，阶段四、阶段五整体跳过，直接进入阶段六。`env_capability_matrix` 和 `plugin_availability` 写入 `pipeline_state.yaml`，供后续阶段裁剪分支。
 
 **插件可用性检测**：`bkn-env` 同时输出 `plugin_availability`：
 - `plugin_availability.rules: available` → 阶段六可执行
 - `plugin_availability.test: available` → 阶段七/九可执行
 
-## 阶段四：对象视图绑定
+## 阶段四：对象资源绑定
 
 **前置条件**：`bind_mode == full`。若 `bind_mode == deferred`，本阶段和阶段五整体跳过，在 `pipeline_state.yaml` 中记录 `stage4: skipped` 且 `relation_bind: skipped`。
 
@@ -127,18 +127,18 @@ bkn-domain → bkn-extract → [bkn-doctor] → bkn-draft → bkn-env
 
 **前置条件**：`bind_mode == full` 且阶段四已完成。若 `bind_mode == deferred`，本阶段跳过。
 
-**职责**：基于对象绑定结果，判定关系类型（direct / data_view），并为 data_view 类型推荐/绑定中间视图。
+**职责**：基于对象资源绑定结果，判定关系类型（direct / indirect），并为 indirect 类型推荐/绑定 backing resource。
 
 | 步骤 | 读取 | 说明 |
 |------|------|------|
-| 关系类型判定 | `../bkn-relation-bind/SKILL.md` | 分析已绑定对象的视图 schema，判定每条关系的类型 |
-| 中间视图确认 | 用户确认（如有 pending） | 对 data_view 类型关系，确认中间视图或标记 pending |
+| 关系类型判定 | `../bkn-relation-bind/SKILL.md` | 分析已绑定对象的资源 property schema，判定每条关系的类型 |
+| Backing Resource 确认 | 用户确认（如有 pending） | 对 indirect 类型关系，确认 backing resource 或标记 pending |
 | pending 关系处理 | pipeline 判定 | pending 关系不阻断流程，后续可补绑 |
 
 **关系类型判定时机说明**：
 - 关系类型判定依赖对象绑定结果（起点/终点对象绑定到哪个视图）
 - 在 bkn-bind 之后才能知道视图 schema（外键信息）
-- 此时才能判断是否有直接关联字段（direct）或需要中间视图（data_view）
+- 此时才能判断是否有直接关联字段（direct）或需要 backing resource（indirect）
 
 **pending 关系处理**：
 - pending 关系在 `pipeline_state.yaml` 中记录
@@ -152,7 +152,7 @@ bkn-domain → bkn-extract → [bkn-doctor] → bkn-draft → bkn-env
 | 步骤 | 读取 | local 对象处理 |
 |------|------|----------------|
 | 属性级映射 | `../bkn-map/SKILL.md` | 跳过，无视图可映射 |
-| 关系 View Property 映射 | `../bkn-map/SKILL.md`（关系部分） | 仅处理 confirmed 的 data_view 关系 |
+| 关系 Resource Property 映射 | `../bkn-map/SKILL.md`（关系部分） | 仅处理 confirmed 的 indirect 关系 |
 | 回填 .bkn | `../bkn-backfill/SKILL.md` | 跳过，无需回填 |
 | 关系类回填 | `../bkn-backfill/SKILL.md`（关系部分） | 仅处理 confirmed 的关系 |
 | 状态守卫 | （pipeline 直接执行） | 调用 bkn-backfill 前确认 `map_completed == true` 或 `skipped`，否则不执行 |

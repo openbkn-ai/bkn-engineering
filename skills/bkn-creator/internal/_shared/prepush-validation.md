@@ -22,27 +22,27 @@
   1. 解析 Endpoint 中的 Source 和 Target 对象 ID
   2. 确认 Source 对象文件存在于 `{network_dir}/bkn/object_types/` 目录
   3. 确认 Target 对象文件存在于 `{network_dir}/bkn/object_types/` 目录
-  4. 解析 Endpoint 表的 Type 列（direct / data_view / filtered_cross_join）
+  4. 解析 Endpoint 表的 Type 列（direct / indirect / filtered_cross_join）
   
   **direct 类型**：
     5. 解析 Mapping Rules 中的 Source Property 和 Target Property
     6. 确认 Source Property 存在于 Source 对象的 Data Properties 中
     7. 确认 Target Property 存在于 Target 对象的 Data Properties 中
     
-  **data_view 类型**：
-    5. 解析 Mapping View 表，确认 Type 和 ID 非空
-    6. 解析 Source Mapping 中的 Source Property 和 View Property
+  **indirect 类型**：
+    5. 解析 Backing Resource 表，确认 Type 为 resource 且 ID 非空
+    6. 解析 Source Mapping 中的 Source Property 和 Resource Property
     7. 确认 Source Property 存在于 Source 对象的 Data Properties 中
-    8. 确认 View Property 非空（中间视图字段存在性校验在 logics 层执行，需平台 API）
-    9. 解析 Target Mapping 中的 View Property 和 Target Property
+    8. 确认 Resource Property 非空（资源属性存在性校验在 logics 层执行，需平台 API）
+    9. 解析 Target Mapping 中的 Resource Property 和 Target Property
     10. 确认 Target Property 存在于 Target 对象的 Data Properties 中
-    11. 确认 View Property 非空
+    11. 确认 Resource Property 非空
     
   **filtered_cross_join 类型**：
     5. 检查 Source Condition 和 Target Condition 格式正确（不检查属性存在性，因为条件可能跨对象）
     
   **pending 关系处理**：
-    - 如果 Mapping View ID 为空或占位符（如"待绑定"、"TBD"），标记为 warning 而非 fail
+    - 如果 Backing Resource ID 为空或占位符（如"待绑定"、"TBD"），标记为 warning 而非 fail
     - pending 关系不阻断推送，但在报告中标注
 ```
 

@@ -1,6 +1,6 @@
 ---
 name: bkn-relation-bind
-description: 基于对象绑定结果判定关系类型，绑定中间视图（data_view 类型）。
+description: 基于对象资源绑定结果判定关系类型，绑定 backing resource（indirect 类型）。
 ---
 
 # 关系绑定
@@ -9,18 +9,18 @@ description: 基于对象绑定结果判定关系类型，绑定中间视图（d
 
 ## 做什么
 
-在对象类绑定完成后，分析已绑定对象的视图 schema，判定每条关系的类型（direct 或 data_view），并为 data_view 类型推荐/绑定中间视图。
+在对象类绑定完成后，分析已绑定资源的 property schema，判定每条关系的类型（direct 或 indirect），并为 indirect 类型推荐/绑定 backing resource。
 
 ## 触发时机
 
-在 `bkn-bind` 之后、`bkn-map` 之前执行。此时对象类已绑定到具体数据视图，可以分析视图间的关联关系。
+在 `bkn-bind` 之后、`bkn-map` 之前执行。此时对象类已绑定到资源，可以分析资源间的关联关系。
 
 ## 输入
 
 - `binding_decision_list`：`bkn-bind` 的输出（bound 对象列表）
-- `view_schema_map`：各对象视图的字段 schema + 外键信息
+- `resource_schema_map`：各对象资源的 property schema + 外键信息
 - `relation_list`：关系清单（来自 `bkn-extract`）
-- `dataview_availability`：可选，平台可用视图列表（用于中间视图推荐）
+- `resource_availability`：可选，平台可用资源列表（用于 backing resource 推荐）
 
 ## 关系类型判定规则
 
@@ -34,7 +34,7 @@ description: 基于对象绑定结果判定关系类型，绑定中间视图（d
 | 起点属性与终点属性同名且类型兼容 | 如 `supplier_code` 在两端都存在 |
 | 单数据源内的主键-外键关系 | 同一数据库内可直接 JOIN |
 
-### data_view 类型
+### indirect 类型
 
 满足以下条件之一：
 
@@ -58,7 +58,7 @@ description: 基于对象绑定结果判定关系类型，绑定中间视图（d
 4. 检查起点属性名是否与终点属性名匹配（同名检查）
 5. 判定类型：
    - 有直接关联 → direct
-   - 无直接关联 → data_view
+   - 无直接关联 → indirect
 ```
 
 ### 2. direct 类型处理
@@ -70,11 +70,11 @@ description: 基于对象绑定结果判定关系类型，绑定中间视图（d
 2. 输出到 direct_relations 列表
 ```
 
-### 3. data_view 类型处理
+### 3. indirect 类型处理
 
 ```
 1. 中间视图推荐：
-   - 扫描 dataview_availability，找同时引用起点和终点视图的候选
+   - 扫描 resource_availability，找同时关联起点和终点资源的候选
    - 或根据业务名称线索匹配（如"订单明细"、"关联表"）
    - 输出候选列表（最多 5 个）
    
@@ -139,24 +139,24 @@ relation_binding_result:
       判定依据: ""  # 如"起点视图 product_code 外键引用终点视图"
       confidence: high | medium | low
       
-  data_view_relations:
+  indirect_relations:
     - 关系ID: ""
       关系名称: ""
       源对象: ""
       目标对象: ""
-      intermediate_view_id: ""    # 确认后填入
-      intermediate_view_name: ""  # 确认后填入
-      intermediate_view_candidates:  # 推荐候选
-        - view_id: ""
-          view_name: ""
+      backing_resource_id: ""     # 确认后填入
+      backing_resource_name: ""   # 确认后填入
+      backing_resource_candidates: # 推荐候选
+        - resource_id: ""
+          resource_name: ""
           match_reason: ""
           confidence: high | medium | low
       status: confirmed | pending | rejected
       source_mapping_rules:       # 确认后填入
         - source_property: ""
-          view_property: ""
+          resource_property: ""
       target_mapping_rules:       # 确认后填入
-        - view_property: ""
+        - resource_property: ""
           target_property: ""
       判定依据: ""  # 如"跨数据源，需中间视图"
       
@@ -169,14 +169,14 @@ relation_binding_result:
 relation_binding_summary:
   total_relations: 0
   direct_count: 0
-  data_view_confirmed_count: 0
-  data_view_pending_count: 0
+  indirect_confirmed_count: 0
+  indirect_pending_count: 0
   pending_count: 0
 ```
 
 ## 用户确认阶段
 
-当存在 data_view 类型关系需要确认时，pipeline 会暂停并展示：
+当存在 indirect 类型关系需要确认时，pipeline 会暂停并展示：
 
 ```
 检测到 {n} 条关系需要中间视图绑定：
@@ -202,9 +202,9 @@ relation_binding_summary:
 
 | Skill | 消费内容 |
 |-------|----------|
-| `bkn-map` | `direct_relations.mapping_rules` + `data_view_relations.source/target_mapping_rules`（仅 confirmed） |
+| `bkn-map` | `direct_relations.mapping_rules` + `indirect_relations.source/target_mapping_rules`（仅 confirmed） |
 | `bkn-draft` | 关系类型 + Mapping 结构（pending 关系生成占位符版本） |
-| `bkn-backfill` | 关系类 Mapping View + Source/Target Mapping 回填 |
+| `bkn-backfill` | 关系类 Backing Resource + Source/Target Mapping 回填 |
 
 ## 约束
 

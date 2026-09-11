@@ -83,9 +83,8 @@ tags: [tag1, tag2]               # 可选
 - `### Logic Properties`（可选）：无内容时保留空小节；有内容时 `#### {property_name}`，含 Display/Type/Source/Description，以及 Parameter 表（列 Parameter | Type | Source | Binding | Description）
   - Source 值：`property`（对象属性）/ `input`（用户输入）/ `const`（常量）
   - Binding：Source 为 property 时填属性名，const 时填常量值，input 时填 `-`
-- `### Data Source`（可选）：表格，列 Type | ID | Name；无数据视图绑定时可省略整节
-  - Type 为 `data_view` 时，ID 填 mdl 数据视图 UUID（来自 `dataview list`），需 `bkn build` 构建索引后才可查询
-  - Type 为 `resource` 时，ID 填 Vega 资源 ID（来自 `vega resource list`），数据通过 Vega 实时查询，无需也不支持 `bkn build`
+- `### Data Source`（可选）：表格，列 Type | ID | Name；无资源绑定时可省略整节
+  - Type 固定为 `resource`；ID 填 Vega 资源 ID（来自 `vega resource list`），数据通过 Vega 实时查询，无需也不支持 `bkn build`
 
 ### 数据类型
 
@@ -120,13 +119,13 @@ tags: [tag1, tag2]               # 可选
 
 正文：
 - `## RelationType: {显示名称}` + 简短描述
-- `### Endpoint`（必须）：表格 Source | Target | Type（`direct` 或 `data_view`）
+- `### Endpoint`（必须）：表格 Source | Target | Type（`direct` 或 `indirect`）
 - **direct 类型**时：
   - `### Mapping Rules`：表格 Source Property | Target Property
-- **data_view 类型**时：
-  - `### Mapping View`：表格 Type | ID
-  - `### Source Mapping`：表格 Source Property | View Property
-  - `### Target Mapping`：表格 View Property | Target Property
+- **indirect 类型**时：
+  - `### Backing Resource`：表格 Type | ID；Type 固定为 `resource`
+  - `### Source Mapping`：表格 Source Property | Resource Property
+  - `### Target Mapping`：表格 Resource Property | Target Property
 
 ## 行动类型 (ActionType)
 
@@ -207,7 +206,7 @@ tags: [tag1, tag2]               # 可选
 6. **必填字段**：
    - 所有类型：type、id、name
    - ObjectType：Data Properties、Keys（Primary Keys + Display Key）
-   - RelationType：Endpoint、Mapping Rules（或 Mapping View + Source/Target Mapping）
+   - RelationType：Endpoint、Mapping Rules（或 Backing Resource + Source/Target Mapping）
    - ActionType：Bound Object、Tool Configuration、Parameter Binding
    - ConceptGroup：Object Types
 7. **标题层级**：`#` 网络标题、`##` 类型定义、`###` 定义内 section、`####` 子项（逻辑属性名）

@@ -72,7 +72,7 @@ openbkn vega resource preview <id> [--limit N]
 
 Vega Resource 可直接用于绑定 BKN 对象类：在 `object-type create` 或 `.bkn` 文件中设置 `data_source: { type: "resource", id: "<resource-id>" }`。`create-from-ds` 内部就是使用此路径。绑定 `resource` 类型的对象类数据通过 Vega 实时查询，**不需要也不支持 `bkn build`**。
 
-`vega resource list` 返回的 ID 与 `dataview list` 返回的 mdl UUID **不同**——前者是 Vega 资源 ID，后者是 mdl 数据视图 UUID，分属不同的后端服务。两种 ID 均可用于 BKN 绑定（对应不同的 `data_source.type`：`resource` 实时查询 / `data_view` 需构建索引）。
+`vega resource list` 返回的 ID 与 `dataview list` 返回的 mdl UUID **不同**：前者是 BKN 对象和间接关系 backing resource 可用的 Vega 资源 ID；后者是 mdl 数据视图 UUID，不能用于 BKN 绑定。
 
 获取 Resource 列信息：`resource get` 不返回列元数据，需通过 `resource query <id> -d '{"limit":1}'` 查询一条数据来推断字段名和类型。
 
