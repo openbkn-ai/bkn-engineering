@@ -33,6 +33,6 @@ openbkn config list-bd                 # 从平台列出可选 business domain�
 ```bash
 openbkn config set-bd 54308785-4438-43df-9490-a7fd11df5765
 openbkn config show
-# Platform:        https://dip-poc.aishu.cn
+# Platform:        https://<your-platform>
 # Business Domain: 54308785-4438-43df-9490-a7fd11df5765 (config)
 ```
